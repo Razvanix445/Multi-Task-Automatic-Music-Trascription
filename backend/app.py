@@ -350,8 +350,8 @@ def check_musescore_with_display():
         return False, None, "MuseScore not responding"
 
     except Exception as e:
-        logger.error(f"❌ Display setup error: {e}")
-        return False, None, str(e)
+        logger.exception("❌ Display setup error during MuseScore detection")
+        return False, None, "MuseScore check failed"
 
 
 def check_musescore_installation():
@@ -1339,11 +1339,12 @@ def check_musescore_status():
             "features": ["pdf", "musicxml"] if is_available else []
         })
     except Exception as e:
+        logger.exception("Failed to check MuseScore status")
         return jsonify({
             "available": False,
-            "error": str(e),
+            "error": "Internal error while checking MuseScore status",
             "features": []
-        })
+        }), 500
 
 
 @app.route('/upload', methods=['POST'])
