@@ -7,8 +7,8 @@ scipy==1.11.4
 
 # Web Framework
 Flask==3.0.0
-Flask-CORS==4.0.0
-Werkzeug==3.1.6
+Flask-CORS==6.0.0
+Werkzeug==3.0.1
 
 # Audio Processing
 pydub==0.25.1
