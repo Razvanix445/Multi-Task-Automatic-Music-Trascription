@@ -723,7 +723,14 @@ def save_generated_files_to_s3(user_id, recording_id, result_data):
                 pdf_url = sheet_info['fileUrl']
                 if pdf_url.startswith('/api/download/'):
                     pdf_filename = pdf_url.replace('/api/download/', '')
-                    pdf_local_path = os.path.join(OUTPUT_FOLDER, pdf_filename)
+
+                    # Treat filename from URL as untrusted and enforce OUTPUT_FOLDER boundary
+                    output_root = os.path.realpath(OUTPUT_FOLDER)
+                    pdf_local_path = os.path.realpath(os.path.join(output_root, pdf_filename))
+
+                    if os.path.commonpath([output_root, pdf_local_path]) != output_root:
+                        logger.warning(f"⚠️ Skipping invalid PDF path outside output folder: {pdf_filename}")
+                        continue
 
                     if os.path.exists(pdf_local_path):
                         pdf_s3_path = f"{recording_folder}/sheet_music.pdf"
